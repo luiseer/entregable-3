@@ -12,7 +12,7 @@ const ResidentInfo = ({ location }) => {
     }, [location])
 
     return (
-            <div className='card'>
+            <div className='card-carater'>
                 <p>Nombre: <b>{caracter?.name}</b></p>
                 <img src={caracter?.image} alt="" />
                 <p>Status: {caracter?.status}</p>

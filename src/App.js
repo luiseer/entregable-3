@@ -39,7 +39,10 @@ const [location, setLocation] = useState({})
           <p> Cantidad de Residentes: <b>{location.residents?.length}</b></p>
           <p></p>
         </div>
-        <ResidentInfo location={location.residents} key={location.id}/>
+        <div className='card'>
+          <ResidentInfo location={location.residents} key={location.id}/>
+        </div>
+        
         {/* <ResidentsList location={location}/> */}
       </>
    
