@@ -1,0 +1,37 @@
+/* Paleta de colores 
+  --white: #fff,
+  --beige: #F9DCB5,
+  --green: #53DB75,
+  --brown: #DB973D,
+  --purple: #7427DB,
+  --purpleVariant: #4F218F
+ */
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  padding: 0;
+  margin: 0;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body{
+  font-size: 16px;
+  background-image: url(./img/thumb-1920-909641.png);
+  background-size:  100vw 100vh;
+  background-repeat: no-repeat;
+}
+p{
+  color: #fff;
+}
+
+h1{
+  text-align: center;
+  font-size: 4.5rem;
+  color: #53db75;
+}
+
+.location-info{
+  display: flex;
+  justify-content: space-between;
+}
