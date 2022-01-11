@@ -11,12 +11,14 @@ const ResidentInfo = ({ location }) => {
         .catch(err => console.log(err))
     }, [location])
 
+    console.log()
+
     return (
             <div className='card-carater'>
                 <p>Nombre: <b>{caracter?.name}</b></p>
-                <img src={caracter?.image} alt="" />
-                <p>Status: {caracter?.status}</p>
-                <p>Origen: {caracter?.origin?.name}</p>
+                <img src={caracter?.image} alt="caracter-img"/>
+                <p >Status: {caracter?.status}</p>
+                <p >Origen: {caracter?.origin?.name}</p>
                 <p>Capitulos: {caracter?.episode?.length}</p>
             </div>
     )
