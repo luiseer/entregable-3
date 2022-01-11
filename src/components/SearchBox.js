@@ -11,8 +11,8 @@ const SearchBox = ({ setLocation }) => {
     }
     return (
         <div className='search-box'>
-            <input type="text" onChange={(e) => setId(e.target.value)} value={id} />
-            <button onClick={search}>Search</button>
+            <input placeholder='ingresa el numero de planeta' type="text" onChange={(e) => setId(e.target.value)} value={id} />
+            <button className='boton' onClick={search}>Search</button>
         </div>
     )
 }
