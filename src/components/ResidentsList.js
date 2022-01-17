@@ -3,10 +3,13 @@ import ResidentInfo from './ResidentInfo';
 
 const ResidentsList = ({ location }) => {
     return (
-        <div className='container caracter-list'>
-             {location.residents?.map((resident) =>(
-                <ResidentInfo residents={resident.residents} key={resident.id}/>
-            ))}
+        <div className='container grid'>
+            {
+                location.residents?.map(resident => (
+                    <ResidentInfo url={resident}/>  
+                ))
+            }
+
         </div>
     )
 }

@@ -1,26 +1,28 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const ResidentInfo = ({ location }) => {
+const ResidentInfo = ({ url }) => {
 
     const [caracter, setCaracter] = useState({})
 
     useEffect(() => {
-        axios.get(location)
-        .then(res => setCaracter(res.data))
-        .catch(err => console.log(err))
-    }, [location])
+        axios.get(url)
+            .then(res => setCaracter(res.data))
+            .catch(err => console.log(err))
+    }, [url])
 
-    console.log()
+    console.log(caracter)
 
     return (
-            <div className='card-carater'>
+
+            <main className='card'>
                 <p>Nombre: <b>{caracter?.name}</b></p>
-                <img src={caracter?.image} alt="caracter-img"/>
+                <img src={caracter?.image} alt="caracter-img" />
                 <p >Status: {caracter?.status}</p>
                 <p >Origen: {caracter?.origin?.name}</p>
                 <p>Capitulos: {caracter?.episode?.length}</p>
-            </div>
+            </main>
+        
     )
 }
 export default ResidentInfo;
