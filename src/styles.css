@@ -20,6 +20,7 @@ body{
   font-size: 16px;
   background-image: url(./img/rickYmortyPortal.jpg);
   background-repeat: repeat;
+  background-position: unset;
 
 }
 p{
