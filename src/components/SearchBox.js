@@ -10,10 +10,10 @@ const SearchBox = ({ setLocation }) => {
         .then(res => setLocation(res.data))
     }
     return (
-        <div className='search-box'>
+        <form className='search-box'>
             <input placeholder='ingresa el numero de planeta' type="text" onChange={(e) => setId(e.target.value)} value={id} />
             <button className='boton' onClick={search}>Search</button>
-        </div>
+        </form>
     )
 }
 
