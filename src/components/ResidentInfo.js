@@ -11,7 +11,7 @@ const ResidentInfo = ({ url }) => {
             .catch(err => console.log(err))
     }, [url])
 
-    console.log(caracter)
+    // console.log(caracter)
 
     return (
 
