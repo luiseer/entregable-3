@@ -4,7 +4,8 @@ import React, {useState}  from 'react'
 const SearchBox = ({ setLocation }) => {
     const [id, setId] = useState("")
 
-    const search = () => {
+    const search = (event) => {
+        event.preventDefault()
         axios
         .get(`https://rickandmortyapi.com/api/location/${id}`)
         .then(res => setLocation(res.data))
