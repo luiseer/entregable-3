@@ -12,7 +12,7 @@ const SearchBox = ({ setLocation }) => {
     }
     return (
         <form className='search-box' onSubmit={handleSubmit}>
-            <input placeholder='ingresa el numero de planeta' type="text" onChange={(e) => setId(e.target.value)} value={id} />
+            <input placeholder='ingresa un número hasta el 126' type="text" onChange={(e) => setId(e.target.value)} value={id} />
             <button className='boton' >Search</button>
         </form>
     )
