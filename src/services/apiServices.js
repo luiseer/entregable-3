@@ -7,6 +7,8 @@ const getAllLocatiosn = () => {
         .get(urlLocations)
         .then(response => {
             const {data} = response
-            
+            return data
         })
 }
+
+export default getAllLocatiosn
