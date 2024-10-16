@@ -6,14 +6,10 @@ import ResidentsList from './components/ResidentsList';
 // import ResidentInfo from './components/ResidentInfo';
 import SearchBox from './components/SearchBox';
 
-
-
 const randomId = Math.floor(Math.random() * 126) + 1;
 
 
 const App =() => {
-
-
 const [location, setLocation] = useState({})
 
   useEffect(() => {
@@ -26,8 +22,6 @@ const [location, setLocation] = useState({})
   
   //console.log(location)
   // console.log(location.residents?.map(resident => resident))
-
-
     return (
       <>
         <h1>Ryck & Morty</h1>
