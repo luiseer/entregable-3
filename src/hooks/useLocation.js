@@ -24,17 +24,22 @@ const useLocation = () => {
   const fetchRandom = useCallback(async () => {
     setLoading(true)
     setError(null)
+    let attempts = 0
+    const maxAttempts = 20
     try {
-      const id = Math.floor(Math.random() * 126) + 1
-      const data = await getLocationById(id)
-      if (data.error) {
-        setError('😰 No encontramos esa ubicación en ninguna dimensión')
-        setLocation(null)
-        setResidents([])
-      } else {
-        setLocation(data)
-        await fetchResidents(data)
+      while (attempts < maxAttempts) {
+        const id = Math.floor(Math.random() * 126) + 1
+        const data = await getLocationById(id)
+        if (!data.error && data.residents?.length) {
+          setLocation(data)
+          await fetchResidents(data)
+          return
+        }
+        attempts++
       }
+      setError('😰 No encontramos esa ubicación en ninguna dimensión')
+      setLocation(null)
+      setResidents([])
     } catch {
       setError('😰 No encontramos esa ubicación en ninguna dimensión')
       setLocation(null)
