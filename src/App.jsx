@@ -1,10 +1,10 @@
 import SearchBox from './components/SearchBox'
 import LocationInfo from './components/LocationInfo'
-import ResidentsList from './components/ResidentsList'
+import ResidentGrid from './components/ResidentGrid'
 import useLocation from './hooks/useLocation'
 
 function App() {
-  const { location, residents, loading, error, fetchLocation } = useLocation()
+  const { location, residents, loading, error, fetchRandom, searchLocation } = useLocation()
 
   return (
     <div className="app">
@@ -13,26 +13,22 @@ function App() {
           <span className="title-icon">🔫</span>
           Rick & Morty
         </h1>
-        <p className="app-subtitle">Location Explorer</p>
+        <p className="app-subtitle">Explorador de Ubicaciones</p>
       </header>
 
-      <SearchBox onSearch={fetchLocation} loading={loading} />
+      <SearchBox onSearch={searchLocation} onRandom={fetchRandom} loading={loading} error={error} />
 
-      {error && (
-        <div className="error-card">
-          <span className="error-emoji">😰</span>
-          <p className="error-message">{error}</p>
-        </div>
-      )}
-
-      {loading && !location && !error && (
-        <ResidentsList residents={[]} loading={true} />
+      {loading && !location && (
+        <ResidentGrid residents={[]} loading={true} />
       )}
 
       {location && !error && (
         <>
           <LocationInfo location={location} />
-          <ResidentsList residents={residents} loading={loading} />
+          <section className="resident-section">
+            <h2 className="resident-section-title">👥 Personajes en esta ubicación</h2>
+            <ResidentGrid residents={residents} loading={loading} />
+          </section>
         </>
       )}
     </div>

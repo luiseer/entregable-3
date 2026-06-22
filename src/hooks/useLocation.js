@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getLocation, getCharacter, getLocationsByName } from '../services/api'
+import { getLocationById, searchLocationByName, getCharacter } from '../services/api'
 
 const useLocation = () => {
   const [location, setLocation] = useState(null)
@@ -7,48 +7,93 @@ const useLocation = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const fetchLocation = useCallback(async (query) => {
+  const fetchResidents = useCallback(async (locationData) => {
+    if (!locationData?.residents?.length) {
+      setResidents([])
+      return
+    }
+    const results = await Promise.allSettled(
+      locationData.residents.map(url => getCharacter(url))
+    )
+    const chars = results
+      .filter(r => r.status === 'fulfilled')
+      .map(r => r.value)
+    setResidents(chars)
+  }, [])
+
+  const fetchRandom = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const isNum = /^\d+$/.test(query)
-      let data
-      if (isNum) {
-        data = await getLocation(query)
-      } else {
-        data = await getLocationsByName(query)
-      }
+      const id = Math.floor(Math.random() * 126) + 1
+      const data = await getLocationById(id)
       if (data.error) {
-        setError('Ubicación no encontrada')
+        setError('😰 No encontramos esa ubicación en ninguna dimensión')
         setLocation(null)
         setResidents([])
-        return
-      }
-      const locationData = data.results ? data.results[0] : data
-      setLocation(locationData)
-      if (locationData.residents?.length) {
-        const chars = await Promise.all(
-          locationData.residents.map(url => getCharacter(url))
-        )
-        setResidents(chars)
       } else {
-        setResidents([])
+        setLocation(data)
+        await fetchResidents(data)
       }
     } catch {
-      setError('Ubicación no encontrada')
+      setError('😰 No encontramos esa ubicación en ninguna dimensión')
       setLocation(null)
       setResidents([])
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [fetchResidents])
+
+  const searchLocation = useCallback(async (query) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const isNum = /^\d+$/.test(query)
+      let data, locationData
+
+      if (isNum) {
+        const id = parseInt(query, 10)
+        if (id < 1 || id > 126) {
+          setError('El número debe estar entre 1 y 126')
+          setLocation(null)
+          setResidents([])
+          return
+        }
+        data = await getLocationById(id)
+        if (data.error) {
+          setError('😰 No encontramos esa ubicación en ninguna dimensión')
+          setLocation(null)
+          setResidents([])
+          return
+        }
+        locationData = data
+      } else {
+        data = await searchLocationByName(query)
+        if (data.error || !data.results?.length) {
+          setError('😰 No encontramos esa ubicación en ninguna dimensión')
+          setLocation(null)
+          setResidents([])
+          return
+        }
+        locationData = data.results[0]
+      }
+
+      setLocation(locationData)
+      await fetchResidents(locationData)
+    } catch {
+      setError('😰 No encontramos esa ubicación en ninguna dimensión')
+      setLocation(null)
+      setResidents([])
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchResidents])
 
   useEffect(() => {
-    const id = Math.floor(Math.random() * 126) + 1
-    fetchLocation(String(id))
-  }, [fetchLocation])
+    fetchRandom()
+  }, [fetchRandom])
 
-  return { location, residents, loading, error, fetchLocation }
+  return { location, residents, loading, error, fetchRandom, searchLocation }
 }
 
 export default useLocation

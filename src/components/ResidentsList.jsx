@@ -17,7 +17,7 @@ const ResidentsList = ({ residents, loading }) => {
 
   if (!residents.length) {
     return (
-      <p className="no-residents">No hay residentes en esta ubicación</p>
+      <p className="no-residents">No se encontraron personajes</p>
     )
   }
 
