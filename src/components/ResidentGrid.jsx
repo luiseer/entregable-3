@@ -1,6 +1,6 @@
 import ResidentCard from './ResidentCard'
 
-const ResidentGrid = ({ residents, loading }) => {
+const ResidentGrid = ({ residents, loading, hasMore, onLoadMore, total }) => {
   if (loading && !residents.length) {
     return (
       <div className="grid">
@@ -25,11 +25,24 @@ const ResidentGrid = ({ residents, loading }) => {
   }
 
   return (
-    <div className="grid">
-      {residents.map((char) => (
-        <ResidentCard key={char.id} character={char} />
-      ))}
-    </div>
+    <>
+      <div className="grid">
+        {residents.map((char) => (
+          <ResidentCard key={char.id} character={char} />
+        ))}
+      </div>
+      {hasMore && (
+        <div className="load-more-wrapper">
+          <button
+            className="load-more-btn"
+            onClick={onLoadMore}
+            disabled={loading}
+          >
+            {loading ? <span className="spinner" /> : `Mostrar más (${residents.length} de ${total || '?'})`}
+          </button>
+        </div>
+      )}
+    </>
   )
 }
 

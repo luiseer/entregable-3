@@ -4,7 +4,7 @@ import ResidentGrid from './components/ResidentGrid'
 import useLocation from './hooks/useLocation'
 
 function App() {
-  const { location, residents, loading, error, fetchRandom, searchLocation } = useLocation()
+  const { location, residents, loading, error, hasMore, loadMore, fetchRandom, searchLocation } = useLocation()
 
   return (
     <div className="app">
@@ -27,7 +27,13 @@ function App() {
           <LocationInfo location={location} />
           <section className="resident-section">
             <h2 className="resident-section-title">👥 Personajes en esta ubicación</h2>
-            <ResidentGrid residents={residents} loading={loading} />
+            <ResidentGrid
+              residents={residents}
+              loading={loading}
+              hasMore={hasMore}
+              onLoadMore={loadMore}
+              total={location.residents?.length}
+            />
           </section>
         </>
       )}

@@ -1,56 +1,71 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getLocationById, searchLocationByName, getCharacter } from '../services/api'
 
+const PAGE_SIZE = 20
+
 const useLocation = () => {
   const [location, setLocation] = useState(null)
+  const [residentUrls, setResidentUrls] = useState([])
   const [residents, setResidents] = useState([])
+  const [fetchedCount, setFetchedCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const fetchResidents = useCallback(async (locationData) => {
-    if (!locationData?.residents?.length) {
-      setResidents([])
-      return
-    }
-    const chars = []
-    const urls = locationData.residents
-    for (let i = 0; i < urls.length; i += 5) {
-      const batch = urls.slice(i, i + 5)
-      const results = await Promise.allSettled(batch.map(url => getCharacter(url)))
-      for (const r of results) {
-        if (r.status === 'fulfilled') chars.push(r.value)
-      }
-    }
-    setResidents(chars)
+  const fetchBatch = useCallback(async (urls, start) => {
+    const batch = urls.slice(start, start + PAGE_SIZE)
+    if (!batch.length) return []
+    const results = await Promise.allSettled(batch.map(url => getCharacter(url)))
+    return results
+      .filter(r => r.status === 'fulfilled')
+      .map(r => r.value)
   }, [])
+
+  const initLocation = useCallback(async (locationData) => {
+    const urls = locationData.residents || []
+    setLocation(locationData)
+    setResidentUrls(urls)
+    setResidents([])
+    setFetchedCount(0)
+
+    if (!urls.length) return
+
+    setLoading(true)
+    const chars = await fetchBatch(urls, 0)
+    setResidents(chars)
+    setFetchedCount(Math.min(PAGE_SIZE, urls.length))
+    setLoading(false)
+  }, [fetchBatch])
+
+  const loadMore = useCallback(async () => {
+    if (loading || fetchedCount >= residentUrls.length) return
+    setLoading(true)
+    const chars = await fetchBatch(residentUrls, fetchedCount)
+    setResidents(prev => [...prev, ...chars])
+    setFetchedCount(prev => Math.min(prev + PAGE_SIZE, residentUrls.length))
+    setLoading(false)
+  }, [loading, fetchedCount, residentUrls, fetchBatch])
 
   const fetchRandom = useCallback(async () => {
     setLoading(true)
     setError(null)
     let attempts = 0
-    const maxAttempts = 20
-    try {
-      while (attempts < maxAttempts) {
-        const id = Math.floor(Math.random() * 126) + 1
+    while (attempts < 20) {
+      const id = Math.floor(Math.random() * 126) + 1
+      try {
         const data = await getLocationById(id)
         if (!data.error && data.residents?.length) {
-          setLocation(data)
-          await fetchResidents(data)
+          await initLocation(data)
           return
         }
-        attempts++
-      }
-      setError('😰 No encontramos esa ubicación en ninguna dimensión')
-      setLocation(null)
-      setResidents([])
-    } catch {
-      setError('😰 No encontramos esa ubicación en ninguna dimensión')
-      setLocation(null)
-      setResidents([])
-    } finally {
-      setLoading(false)
+      } catch {}
+      attempts++
     }
-  }, [fetchResidents])
+    setError('😰 No encontramos esa ubicación en ninguna dimensión')
+    setLocation(null)
+    setResidentUrls([])
+    setResidents([])
+    setLoading(false)
+  }, [initLocation])
 
   const searchLocation = useCallback(async (query) => {
     setLoading(true)
@@ -64,6 +79,7 @@ const useLocation = () => {
         if (id < 1 || id > 126) {
           setError('El número debe estar entre 1 y 126')
           setLocation(null)
+          setResidentUrls([])
           setResidents([])
           return
         }
@@ -71,6 +87,7 @@ const useLocation = () => {
         if (data.error) {
           setError('😰 No encontramos esa ubicación en ninguna dimensión')
           setLocation(null)
+          setResidentUrls([])
           setResidents([])
           return
         }
@@ -80,28 +97,29 @@ const useLocation = () => {
         if (data.error || !data.results?.length) {
           setError('😰 No encontramos esa ubicación en ninguna dimensión')
           setLocation(null)
+          setResidentUrls([])
           setResidents([])
           return
         }
         locationData = data.results[0]
       }
 
-      setLocation(locationData)
-      await fetchResidents(locationData)
+      await initLocation(locationData)
     } catch {
       setError('😰 No encontramos esa ubicación en ninguna dimensión')
       setLocation(null)
+      setResidentUrls([])
       setResidents([])
     } finally {
       setLoading(false)
     }
-  }, [fetchResidents])
+  }, [initLocation])
 
-  useEffect(() => {
-    fetchRandom()
-  }, [fetchRandom])
+  useEffect(() => { fetchRandom() }, [fetchRandom])
 
-  return { location, residents, loading, error, fetchRandom, searchLocation }
+  const hasMore = fetchedCount < residentUrls.length
+
+  return { location, residents, loading, error, hasMore, loadMore, fetchRandom, searchLocation }
 }
 
 export default useLocation
