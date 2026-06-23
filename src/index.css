@@ -486,6 +486,23 @@ body::before {
   display: block;
 }
 
+.resident-card-img-fallback {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resident-card-img-fallback::after {
+  content: '?';
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+}
+
 .resident-card-status {
   position: absolute;
   top: 0.8rem;
