@@ -12,12 +12,15 @@ const useLocation = () => {
       setResidents([])
       return
     }
-    const results = await Promise.allSettled(
-      locationData.residents.map(url => getCharacter(url))
-    )
-    const chars = results
-      .filter(r => r.status === 'fulfilled')
-      .map(r => r.value)
+    const chars = []
+    const urls = locationData.residents
+    for (let i = 0; i < urls.length; i += 5) {
+      const batch = urls.slice(i, i + 5)
+      const results = await Promise.allSettled(batch.map(url => getCharacter(url)))
+      for (const r of results) {
+        if (r.status === 'fulfilled') chars.push(r.value)
+      }
+    }
     setResidents(chars)
   }, [])
 
