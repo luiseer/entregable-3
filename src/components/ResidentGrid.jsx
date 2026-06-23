@@ -1,6 +1,6 @@
 import ResidentCard from './ResidentCard'
 
-const ResidentGrid = ({ residents, loading, hasMore, onLoadMore, total }) => {
+const ResidentGrid = ({ residents, loading, hasMore, onLoadMore, total, onSelect }) => {
   if (loading && !residents.length) {
     return (
       <div className="grid">
@@ -28,7 +28,7 @@ const ResidentGrid = ({ residents, loading, hasMore, onLoadMore, total }) => {
     <>
       <div className="grid">
         {residents.map((char) => (
-          <ResidentCard key={char.id} character={char} />
+          <ResidentCard key={char.id} character={char} onSelect={onSelect} />
         ))}
       </div>
       {hasMore && (

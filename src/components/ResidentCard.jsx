@@ -1,10 +1,10 @@
-const ResidentCard = ({ character }) => {
+const ResidentCard = ({ character, onSelect }) => {
   const statusClass =
     character.status === 'Alive' ? 'status-alive' :
     character.status === 'Dead' ? 'status-dead' : 'status-unknown'
 
   return (
-    <article className="resident-card">
+    <article className="resident-card" onClick={() => onSelect?.(character)}>
       <div className="resident-card-img-wrapper">
         <img
           className="resident-card-img"

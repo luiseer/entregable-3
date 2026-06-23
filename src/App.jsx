@@ -1,10 +1,21 @@
+import { useState } from 'react'
 import SearchBox from './components/SearchBox'
 import LocationInfo from './components/LocationInfo'
 import ResidentGrid from './components/ResidentGrid'
+import CharacterDetail from './components/CharacterDetail'
 import useLocation from './hooks/useLocation'
 
 function App() {
   const { location, residents, loading, error, hasMore, loadMore, fetchRandom, searchLocation } = useLocation()
+  const [selectedCharacter, setSelectedCharacter] = useState(null)
+
+  if (selectedCharacter) {
+    return (
+      <div className="app">
+        <CharacterDetail character={selectedCharacter} onBack={() => setSelectedCharacter(null)} />
+      </div>
+    )
+  }
 
   return (
     <div className="app">
@@ -33,6 +44,7 @@ function App() {
               hasMore={hasMore}
               onLoadMore={loadMore}
               total={location.residents?.length}
+              onSelect={setSelectedCharacter}
             />
           </section>
         </>
