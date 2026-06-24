@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# Rick & Morty — Explorador de Ubicaciones
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+App que consume la [Rick and Morty API](https://rickandmortyapi.com) para explorar ubicaciones del multiverso y sus residentes.
 
-## Available Scripts
+## Funcionalidad
 
-In the project directory, you can run:
+- **Ubicación aleatoria** — Al cargar la página se muestra una ubicación al azar con residentes.
+- **Buscar por nombre o ID** — Escribe el nombre de una dimensión (ej: Earth, Citadel) o un número del 1 al 126.
+- **🎲 Botón Aleatorio** — Carga una ubicación distinta con personajes.
+- **Cards de personajes** — Cada residente se muestra con imagen, nombre, estado (vivo/muerto/desconocido), especie y origen.
+- **Paginación (20 por página)** — Las ubicaciones con muchos residentes cargan en bloques de 20, con botón "Mostrar más".
+- **Detalle del personaje** — Click en cualquier card para ver información completa con efectos visuales y botón para volver.
 
-### `npm start`
+## Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Vite** + **React 18** (createRoot)
+- **Fetch nativa** (sin Axios)
+- **CSS plano** con variables de diseño (dark mode, tokens globales)
+- **Netlify** (despliegue)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Scripts
 
-### `npm test`
+```bash
+npm run dev      # Entorno de desarrollo (localhost:5173)
+npm run build    # Build para producción → dist/
+npm run preview  # Previsualizar build localmente
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Estructura
 
-### `npm run build`
+```
+src/
+├── App.jsx                  # Componente principal (ruteo por estado)
+├── main.jsx                 # Entry point (createRoot)
+├── index.css                # Tokens, layout, componentes
+├── components/
+│   ├── SearchBox.jsx        # Buscador con label + botón aleatorio
+│   ├── LocationInfo.jsx     # Pills con datos de la ubicación
+│   ├── ResidentCard.jsx     # Card de personaje (click → detalle)
+│   ├── ResidentGrid.jsx     # Grilla responsiva + paginación
+│   └── CharacterDetail.jsx  # Vista detalle del personaje
+├── hooks/
+│   └── useLocation.js       # Hook: fetch, paginación, random
+└── services/
+    └── api.js               # Llamadas a la API con fetch nativo
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Diseño
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Fondo oscuro con imagen del portal a 15% de opacidad
+- Tipografía: **Creepster** (títulos), **Inter** (cuerpo)
+- Color accent: `#B0E812` (verde Rick & Morty)
+- Cards con hover: scale + glow border verde
+- Grilla responsive: 2 columnas móvil, 3 tablet, 4 desktop
+- Esqueletos animados (pulse) mientras carga
